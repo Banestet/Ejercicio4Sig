@@ -1,4 +1,4 @@
- ciudades2 ={
+ var ciudades2 ={
 "type": "FeatureCollection",
 "name": "ciudades2",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
