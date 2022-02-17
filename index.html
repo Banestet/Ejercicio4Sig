@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8" />
+<title>Ejercicio 4</title>
+
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+
+    <script type="text/javascript" src="paises.js"></script>
+    <script type="text/javascript" src="ciudades2.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 700px;
+            box-shadow: 5px 5px 5px #888;
+        }
+        
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+        
+        .info h2 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>' +
+                'contributors'
+        });
+
+        /* Craeacion del mapa basado en coordenadas*/
+        var map = L.map('map', {
+            center: new L.LatLng(41.66, -4.72),
+            zoom: 4,
+            layers: osm
+        });
+
+        /*añadimos la varaible paises del archivo paises js*/
+        L.geoJson(paises).addTo(map);
+        /*capa ciudades*/
+        L.geoJson(ciudades2).addTo(map);
+
+
+
+
+        /*style*/
+        function getColor(d) {
+            return d == "South America" ? '#F3FF00' :
+                d == "Europe" ? '#FF9E00' :
+                d == "Africa" ? '#55FF00' :
+                d == "North America" ? '#0046FF' :
+                d == "Asia" ? '#FF0000' :
+                d == "Oceania" ? '#B600FF' :
+                '#000000';
+        };
+
+
+
+
+        function style(feature) {
+            return {
+                fillColor: getColor(feature.properties.continent),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+
+
+        function getColorCiudad(d) {
+            return d == "N" ? '#F3FF00' :
+                d == "S" ? '#FF9E00' :
+                '#000000';
+        };
+
+        function style2(feature) {
+            return {
+                PointerEvent: getColorCiudad(feature.properties.CAPITAL),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+
+
+
+        /*interactuando con el mapa*/
+        function popup(feature, layer) {
+            if (feature.properties && feature.properties.name) {
+                layer.bindPopup(feature.properties.name);
+            }
+        }
+
+
+        /*añadimos el estilo de la capa paises*/
+        geojson = L.geoJson(paises, {
+            style: style,
+            onEachFeature: popup
+        }).addTo(map);
+
+
+
+        L.geoJson(ciudades2, {
+            style: style2
+        }).addTo(map);
+
+
+
+
+
+
+        /*control de escala general*/
+        L.control.scale().addTo(map);
+    </script>
+</body>
+
+</html>
